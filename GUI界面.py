@@ -1,46 +1,57 @@
-import bs4
-import re
-import json
+import tkinter as tk
+from tkinter import filedialog
+import os
 
-import jsonpath
-import requests
-import urllib.error,urllib.request
-from bs4 import BeautifulSoup
-from urllib.parse import urlparse
-# 洛谷题目页面的 URL
-headers = {
-        "authority": "www.luogu.com.cn",
-        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-        "accept-language": "zh-CN,zh;q=0.9",
-        "cache-control": "max-age=0",
-        "sec-ch-ua": "\"Chromium\";v=\"116\", \"Not)A;Brand\";v=\"24\", \"Google Chrome\";v=\"116\"",
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": "\"Windows\"",
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "none",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
-        "Cookie": "__client_id=a0306231cd05f9a814ca1bdf95c050400268bedf; _uid=0",
-    }
-tag_url = 'https://www.luogu.com.cn/_lfe/tags'
-tag_html = requests.get(url=tag_url, headers=headers).json()
-tags_dicts = []
-tags_tag = list(jsonpath.jsonpath(tag_html, '$.tags')[0])
-for tag in tags_tag:
-        if jsonpath.jsonpath(tag, '$.type')[0] != 1 or jsonpath.jsonpath(tag, '$.type')[0] != 4 or \
-                jsonpath.jsonpath(tag, '$.type')[0] != 3:
-            tags_dicts.append({'id': jsonpath.jsonpath(tag, '$.id')[0], 'name': jsonpath.jsonpath(tag, '$.name')[0]})
+difficulties = ["题解","入门","普及−","普及","普及+","提高+","省选","NOI"]
 
-arr = ['暂无评定', '入门', '普及−', '普及/提高−', '普及+/提高', '提高+/省选−', '省选/NOI−', 'NOI/NOI+/CTSC']
-    # //是整除符号
-url = f'https://www.luogu.com.cn/problem/list?page={1}'
-html = requests.get(url=url, headers=headers).text
-urlParse = re.findall('decodeURIComponent\((.*?)\)\)', html)[0]
-htmlParse = json.loads(urllib.parse.unquote(urlParse)[1:-1])
-result = list(jsonpath.jsonpath(htmlParse, '$.currentData.problems.result')[0])
-i=1
-difficulty=[]
-for res in result:
-    difficulty.append(arr[int(jsonpath.jsonpath(res, '$.difficulty')[0])])
+# 创建主窗口
+window = tk.Tk()
+window.title("洛谷题库爬取")
+window.geometry("500x500")
+
+# 创建关键字标签和输入框
+keyword_label = tk.Label(window, text="关键字:")
+keyword_label.pack()
+keyword_entry = tk.Entry(window)
+keyword_entry.pack()
+
+# 创建难度值标签和下拉菜单
+difficulty_label = tk.Label(window, text="难度:")
+difficulty_label.pack()
+selected_difficulty = tk.StringVar()
+difficulty_menu = tk.OptionMenu(window, selected_difficulty, *difficulties)
+difficulty_menu.pack()
+
+# 创建搜索按钮点击事件处理函数
+def search_folder():
+    folder_path = filedialog.askdirectory()  # 选择文件夹
+    if folder_path:
+        keyword = keyword_entry.get()  # 获取关键字输入
+        difficulty = selected_difficulty.get()
+        if difficulty in difficulties:
+            file_list.delete(0, tk.END)  # 清空列表框内容
+
+            # 搜索文件夹
+            for root, dirs, files in os.walk(folder_path):
+                for file in files:
+                    # 处理每个文件
+                    file_path = os.path.join(root, file)
+                    file_name = os.path.basename(file_path)  # 提取文件名
+
+                    # 使用字符串的startswith()和endswith()方法来匹配难度值
+                    if keyword in file_name and file_name.endswith(difficulty+'.md'):
+                        file_list.insert(tk.END, file_name)
+        else:
+            # 处理无效的难度值
+            print("无效的难度值")
+
+# 创建搜索按钮
+button = tk.Button(window, text="选择文件夹并搜索", command=search_folder)
+button.pack()
+
+# 创建结果标签
+file_list = tk.Listbox(window)
+file_list.pack()
+
+# 进入主循环
+window.mainloop()
