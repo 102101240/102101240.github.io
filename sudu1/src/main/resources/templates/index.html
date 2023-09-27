@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #b9c4ff;
+        }
+
+        ul {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        ul li {
+            position: relative;
+            list-style: none;
+        }
+
+        ul li a {
+            position: relative;
+            font-size: 3em;
+            text-decoration: none;
+            color: rgba(247, 102, 102, 0.581);
+            letter-spacing: 0.25em;
+            line-height: 1em;
+            text-transform: capitalize;
+        }
+
+        ul li a::before {
+            content: attr(data-text);
+            position: absolute;
+            color: var(--clr);
+            width: 0;
+            overflow: hidden;
+            border-right: 6px solid var(--clr);
+            transition: 1s;
+        }
+
+        ul li a:hover::before {
+            width: 100%;
+            filter: drop-shadow(0 0 25px var(--clr));
+        }
+
+        ul li a span {
+            position: relative;
+            animation: animateText linear infinite;
+        }
+
+        @keyframes animateText {
+            0%, 20% {
+                color: #fff2;
+                filter: drop-shadow(0 0 0 var(--clr));
+            }
+            21.001%, 79.999% {
+                color: var(--clr);
+                filter: drop-shadow(0 0 25px var(--clr));
+            }
+            80%, 100% {
+                color: #fff2;
+                filter: drop-shadow(0 0 0 var(--clr));
+            }
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+<ul>
+    <li style="--clr:#00ade1;">
+        <a id="startBtn" href="#" data-text="&nbsp;Start">&nbsp;Start</a>
+    </li>
+    <li style="--clr:#ff6493;">
+        <a href="#" data-text="&nbsp;About">&nbsp;About</a>
+    </li>
+    <li style="--clr:#ffdd1c;">
+        <a href="#" data-text="&nbsp;Record">&nbsp;Record</a>
+    </li>
+    <li style="--clr:#00dc82;">
+        <a href="#" data-text="&nbsp;Team">&nbsp;Team</a>
+    </li>
+    <li style="--clr:#dc00d4;">
+        <a href="#" data-text="&nbsp;Contrat">&nbsp;Contrat</a>
+    </li>
+</ul>
+
+<script>
+    let texts = document.querySelectorAll('ul li a');
+    texts.forEach(text => {
+        let letters = text.innerText.split('');
+        text.innerHTML = '';
+        letters.forEach(letter => {
+            let span = document.createElement('span');
+            span.innerText = letter;
+            text.appendChild(span);
+        });
+
+        let spans = text.querySelectorAll('span');
+        spans.forEach(span => {
+            let duration = Math.random() * 5;
+            span.style.animationDuration = 0.25 + duration + 's';
+            span.style.animationDelay = 0.25 + duration + 's';
+        });
+    });
+    // 获取"Start"按钮元素
+    const startBtn = document.getElementById('startBtn');
+
+    // 添加点击事件处理程序
+    startBtn.addEventListener('click', function(e) {
+        e.preventDefault(); // 阻止默认的链接行为
+
+        // 在这里执行页面跳转操作
+        window.location.href = 'http://localhost:8080/';
+    });
+</script>
+</body>
+</html>
