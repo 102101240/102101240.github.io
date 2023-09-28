@@ -1,0 +1,7 @@
+在SudokuGenerator这个类中复制生成数独
+
+在SudokuController中通过创造大小为9的线程池来进行多线程并发生成数独
+
+我们采用的是templates模板，页面在resources的templates里，index.html是首页，Suduku.html是展示数独的页面
+
+运行方法：要先把本地8080端口空出来，然后在idea中在SuduController点运行之后，点击index.html用浏览器打开
