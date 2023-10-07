@@ -20,7 +20,11 @@ public class SudokuGenerator {
         removeCells(board); // 移除格子
         return board;
     }
+    public int[][] solve1(int[][] board){
+        solve(board); // 解数独
 
+        return board;
+    }
     private void fillDiagonalRegions(int[][] board) {
         int[] values = IntStream.rangeClosed(1, SIZE).toArray();
         shuffleArray(values); // 随机打乱数字顺序

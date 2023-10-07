@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>solvedSudokus</title>
+    <style>
+        body {
+            background-color: #b9c4ff;
+        }
+        /* CSS 样式 */
+        .sudoku-cell {
+            width: 40px;
+            height: 40px;
+            /* 其他样式属性 */
+            border: 1px solid black; /* 添加单元格的边框 */
+            padding: 0; /* 移除单元格的内边距 */
+            text-align: center;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .sub-grid {
+            margin: 10px; /* 抵消单元格边框的重叠 */
+        }
+
+        .sub-grid td {
+            padding: 0; /* 移除子数独单元格的内边距 */
+        }
+
+        .sudoku-container {
+            display: inline-block;
+            border: 1px solid black; /* 添加整个数独容器的边框 */
+            padding: 10px;
+            margin: 10px; /* 增加子数独之间的边框距离 */
+        }
+    </style>
+</head>
+<body>
+<div th:each="sudokuBoard : ${solvedSudokus}" class="sudoku-container">
+    <table>
+        <tbody>
+        <tr th:each="row : ${sudokuBoard}">
+            <td th:each="cell : ${row}" class="sudoku-cell sub-grid" th:text="${cell}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
